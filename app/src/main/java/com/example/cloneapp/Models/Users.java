@@ -7,22 +7,25 @@ public class Users {
     String password;
     String location;
     String gender;
-    String email;
+    String zipcode;
+    int age;
 
 
-//    public Users(String profilepic,String mail, String password,int age, String gender,String location) {
-//        this.profilepic=profilepic;
-//        this.mail = mail;
-//        this.password = password;
-//        this.age=age;
-//        this.gender=gender;
-//        this.location=location;
-//    }
-    public Users(String password,String profilepic,String username,String email) {
+    public Users(String profilepic, String username, String mail, String password, String location, String gender, String zipcode,int age) {
+        this.profilepic = profilepic;
+        this.username = username;
+        this.mail = mail;
+        this.password = password;
+        this.location = location;
+        this.gender = gender;
+        this.zipcode = zipcode;
+        this.age=age;
+    }
+    public Users(String password,String profilepic,String username,String mail) {
         this.profilepic=profilepic;
         this.username=username;
         this.password = password;
-        this.email=email;
+        this.mail=mail;
     }
     public  Users(){}
 
@@ -73,20 +76,21 @@ public class Users {
     public void setGender(String gender) {
         this.gender = gender;
     }
-    public String getEmail() {
-        return email;
+
+    public String getZipcode() {
+        return zipcode;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
     }
 
+    public int getAge() {
+        return age;
+    }
 
-//    public int getAge() {
-//        return age;
-//    }
-//
-//    public void setAge(int age) {
-//        this.age = age;
-//    }
+    public void setAge(int age) {
+        this.age = age;
+    }
+
 }

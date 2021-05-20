@@ -23,11 +23,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("message");
-
-        myRef.setValue("Hello, World! Namastey");
-        myRef.setValue("Hello, World! All is going to be ok");
+//        database = FirebaseDatabase.getInstance();
+//        myRef = database.getReference("message");
+//
+//        myRef.setValue("Hello, World! Namastey");
+//        myRef.setValue("Hello, World! All is going to be ok");
 
 //        // Read from the database
 //        myRef.addValueEventListener(new ValueEventListener() {

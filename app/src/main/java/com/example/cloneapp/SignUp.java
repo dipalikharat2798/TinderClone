@@ -30,9 +30,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cloneapp.Models.UserLocation;
@@ -56,6 +58,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -84,12 +89,17 @@ public class SignUp extends AppCompatActivity {
     public static final int CAMERA_REQUEST_CODE = 102;
     public static final int GALLERY_REQUEST_CODE = 105;
     private CircleImageView profileImage;
+    EditText name,email,textPassword,textAge;
+    RadioButton female,male;
+    TextView text_location;
+    Button signup,google,facebook;
     String currentPhotoPath;
     Uri contentUri;
     FusedLocationProviderClient fusedLocationProviderClient;
     String Result,postalCode;
     GoogleSignInClient mGoogleSignInClient;
     int RC_SIGN_IN=65;
+    FirebaseFirestore db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,10 +109,21 @@ public class SignUp extends AppCompatActivity {
         progressDialog.setTitle("Create new accout");
         progressDialog.setMessage("We are creating your new account, please wait!");
         profileImage = findViewById(R.id.profile_image);
+        name=findViewById(R.id.name);
+        email=findViewById(R.id.email);
+        textPassword=findViewById(R.id.textPassword);
+        textAge=findViewById(R.id.textAge);
+        female=findViewById(R.id.female);
+        male=findViewById(R.id.male);
+        text_location=findViewById(R.id.text_location);
+        signup=findViewById(R.id.signup);
+        google=findViewById(R.id.google);
+        facebook=findViewById(R.id.facebook);
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
+        db = FirebaseFirestore.getInstance();
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -122,24 +143,41 @@ public class SignUp extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressDialog.dismiss();
                         if (task.isSuccessful()) {
-//                            Users user = new Users(contentUri.toString(),binding.email.getText().toString(), binding.textPassword.getText().toString(),
-//                                    Integer.valueOf(binding.textAge.getText().toString()), userGender,binding.textLocation.getText().toString());
-                            Users user = new Users( binding.textPassword.getText().toString(),contentUri.toString(),binding.name.getText().toString(),binding.email.getText().toString());
-                            UserLocation userlocation=new UserLocation((binding.email.getText().toString()),Result);
+                            Users user1 = new Users(contentUri.toString(), binding.name.getText().toString(), binding.email.getText().toString(),
+                                    binding.textPassword.getText().toString(), binding.textLocation.getText().toString(), userGender, postalCode,Integer.parseInt(binding.textAge.getText().toString()));
+                            Users user = new Users(binding.textPassword.getText().toString(), contentUri.toString(), binding.name.getText().toString(), binding.email.getText().toString());
+                            UserLocation userlocation = new UserLocation((binding.email.getText().toString()), Result);
+                            CollectionReference users = db.collection("users");
+                            users.add(user1)
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference documentReference) {
+                                            Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w(TAG, "Error adding document", e);
+                                            Log.e("MyTag",task.getException().toString());
+                                        }
+                                    });
                             String id = task.getResult().getUser().getUid();
-                            DatabaseReference root=database.getReference("Users");
-                            DatabaseReference root1=database.getReference("Location");
+                            DatabaseReference root = database.getReference("Users");
+                            DatabaseReference root1 = database.getReference("Location");
                             root.child(userGender).child(binding.textAge.getText().toString()).child(id).
                                     setValue(user);
                             root1.child(postalCode).child(id).setValue(userlocation);
                             Toast.makeText(SignUp.this, "user created successfully", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(SignUp.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                        } else{
+                           Toast.makeText(SignUp.this,"Please fill all information",Toast.LENGTH_SHORT).show();
+
+                       }
                     }
                 });
             }
         });
+
         //profile onclicklistner
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
