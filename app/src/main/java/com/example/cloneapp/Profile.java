@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.cloneapp.databinding.ActivityProfileBinding;
 import com.example.cloneapp.databinding.ActivitySignInBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +30,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
+import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -55,7 +57,7 @@ public class Profile extends AppCompatActivity {
 
          db = FirebaseFirestore.getInstance();
         CollectionReference users = db.collection("users");
-        Query userQuery= users.whereEqualTo("age", 23);
+        Query userQuery= users.whereEqualTo("username", "prachi");
         //Query chainedQuery1 = cities.whereEqualTo("state", "CO").whereEqualTo("name", "Denver");
                 userQuery.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -67,6 +69,11 @@ public class Profile extends AppCompatActivity {
                                 //User user=document.toObject(User.class);
                                 Log.d("TAG", "dipali"+document.getId() + " => " + document.getData());
                                 Log.d("name", document.get("username").toString());
+                                String Url=document.get("profilepic").toString();
+//                                Picasso.get().load(Url).into(binding.profileImage);
+                                Glide.with(getApplicationContext())
+                                        .load(Url)
+                                        .into(binding.profileImage);
                                 binding.username.setText(document.get("username").toString());
                                 binding.age.setText(document.get("age").toString());
                                 binding.gender.setText(document.get("gender").toString());

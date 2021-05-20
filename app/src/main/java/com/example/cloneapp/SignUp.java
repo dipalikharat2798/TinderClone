@@ -82,6 +82,8 @@ public class SignUp extends AppCompatActivity {
     ProgressDialog progressDialog;
     private FirebaseAuth mAuth;
     FirebaseDatabase database;
+    FirebaseStorage storage;
+    StorageReference uploader;
     String userGender = "";
     private static final String TAG = "SignUp Activity";
     int LOCATION_REQUEST_CODE = 10001;
@@ -123,6 +125,7 @@ public class SignUp extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
+        storage=FirebaseStorage.getInstance();
         db = FirebaseFirestore.getInstance();
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -137,6 +140,8 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 progressDialog.show();
+                uploader=storage.getReference("Image1"+new Random().nextInt(100));
+                uploader.putFile(contentUri);
                 mAuth.createUserWithEmailAndPassword(binding.email.getText().toString(),
                         binding.textPassword.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
