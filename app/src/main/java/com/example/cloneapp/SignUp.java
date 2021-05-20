@@ -124,7 +124,7 @@ public class SignUp extends AppCompatActivity {
                         if (task.isSuccessful()) {
 //                            Users user = new Users(contentUri.toString(),binding.email.getText().toString(), binding.textPassword.getText().toString(),
 //                                    Integer.valueOf(binding.textAge.getText().toString()), userGender,binding.textLocation.getText().toString());
-                            Users user = new Users( binding.textPassword.getText().toString(),contentUri.toString(),binding.name.getText().toString());
+                            Users user = new Users( binding.textPassword.getText().toString(),contentUri.toString(),binding.name.getText().toString(),binding.email.getText().toString());
                             UserLocation userlocation=new UserLocation((binding.email.getText().toString()),Result);
                             String id = task.getResult().getUser().getUid();
                             DatabaseReference root=database.getReference("Users");

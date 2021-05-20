@@ -16,6 +16,15 @@
             android:layout_width="match_parent"
             android:layout_height="251dp"
             app:srcCompat="@drawable/avator" />
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:hint="Username"
+            android:gravity="center"
+            android:layout_margin="20dp"
+            android:textSize="20dp"
+            android:textStyle="bold"/>
 
         <RelativeLayout
             android:layout_width="299dp"

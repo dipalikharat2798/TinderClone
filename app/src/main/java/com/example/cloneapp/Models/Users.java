@@ -1,7 +1,13 @@
 package com.example.cloneapp.Models;
 
 public class Users {
-    String profilepic,username,mail,password,location,gender;
+    String profilepic;
+    String username;
+    String mail;
+    String password;
+    String location;
+    String gender;
+    String email;
 
 
 //    public Users(String profilepic,String mail, String password,int age, String gender,String location) {
@@ -12,10 +18,11 @@ public class Users {
 //        this.gender=gender;
 //        this.location=location;
 //    }
-    public Users(String password,String profilepic,String username) {
+    public Users(String password,String profilepic,String username,String email) {
         this.profilepic=profilepic;
         this.username=username;
         this.password = password;
+        this.email=email;
     }
     public  Users(){}
 
@@ -66,6 +73,14 @@ public class Users {
     public void setGender(String gender) {
         this.gender = gender;
     }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 
 //    public int getAge() {
 //        return age;
