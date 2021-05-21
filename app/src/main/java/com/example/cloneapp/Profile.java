@@ -1,6 +1,7 @@
 package com.example.cloneapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -23,13 +24,17 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Type;
@@ -45,19 +50,37 @@ public class Profile extends AppCompatActivity {
     TextView username,age,gender,location;
     Button like,dislike;
    FirebaseFirestore db;
-
+   String user_gender,user_zipcode,user_id,age1;
+   int user_age;
+    StorageReference storageReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding=ActivityProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         getSupportActionBar().setTitle("Your Profile");
         auth=FirebaseAuth.getInstance();
+        user_id=auth.getCurrentUser().getUid();
+        db = FirebaseFirestore.getInstance();
+        DocumentReference documentReference=db.collection("users").document(user_id);
+        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                user_gender= (String) value.get("gender");
+                user_zipcode=(String) value.get("zipcode");
+                age1=(String) value.get("age");
+                Log.d("TAG", "onEvent: "+user_gender+" "+user_zipcode+" "+user_age);
+                value.getData();
+                Log.d("TAG", "dipali"+value.getId() + " => " + value.getData());
 
-         db = FirebaseFirestore.getInstance();
+            }
+        });
+
+
         CollectionReference users = db.collection("users");
-        Query userQuery= users.whereEqualTo("username", "prachi");
+        //Query userQuery= users.whereEqualTo("username", "prachi");
+        Query userQuery = users.whereEqualTo("age",22).whereEqualTo("gender", "female");
+
         //Query chainedQuery1 = cities.whereEqualTo("state", "CO").whereEqualTo("name", "Denver");
                 userQuery.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -71,9 +94,10 @@ public class Profile extends AppCompatActivity {
                                 Log.d("name", document.get("username").toString());
                                 String Url=document.get("profilepic").toString();
 //                                Picasso.get().load(Url).into(binding.profileImage);
-                                Glide.with(getApplicationContext())
-                                        .load(Url)
-                                        .into(binding.profileImage);
+//                                Glide.with(getApplicationContext())
+//                                        .load(Url)
+//                                        .into(binding.profileImage);
+                                Picasso.get().load(Url).into(binding.profileImage);
                                 binding.username.setText(document.get("username").toString());
                                 binding.age.setText(document.get("age").toString());
                                 binding.gender.setText(document.get("gender").toString());
@@ -84,7 +108,7 @@ public class Profile extends AppCompatActivity {
                         }
                     }
                 });
-    }
+   }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater=getMenuInflater();

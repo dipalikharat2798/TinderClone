@@ -73,6 +73,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -140,8 +141,6 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 progressDialog.show();
-                uploader=storage.getReference("Image1"+new Random().nextInt(100));
-                uploader.putFile(contentUri);
                 mAuth.createUserWithEmailAndPassword(binding.email.getText().toString(),
                         binding.textPassword.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -152,7 +151,17 @@ public class SignUp extends AppCompatActivity {
                                     binding.textPassword.getText().toString(), binding.textLocation.getText().toString(), userGender, postalCode,Integer.parseInt(binding.textAge.getText().toString()));
                             Users user = new Users(binding.textPassword.getText().toString(), contentUri.toString(), binding.name.getText().toString(), binding.email.getText().toString());
                             UserLocation userlocation = new UserLocation((binding.email.getText().toString()), Result);
+                            String id = task.getResult().getUser().getUid();
                             CollectionReference users = db.collection("users");
+                            DocumentReference documentReference=db.collection("users").document(id);
+                            uploader=storage.getReference("Image1"+new Random().nextInt(100));
+                            uploader.putFile(contentUri);
+                            documentReference.set(user1).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                }
+                            });
                             users.add(user1)
                                     .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                         @Override
@@ -167,12 +176,11 @@ public class SignUp extends AppCompatActivity {
                                             Log.e("MyTag",task.getException().toString());
                                         }
                                     });
-                            String id = task.getResult().getUser().getUid();
-                            DatabaseReference root = database.getReference("Users");
-                            DatabaseReference root1 = database.getReference("Location");
-                            root.child(userGender).child(binding.textAge.getText().toString()).child(id).
-                                    setValue(user);
-                            root1.child(postalCode).child(id).setValue(userlocation);
+//                            DatabaseReference root = database.getReference("Users");
+//                            DatabaseReference root1 = database.getReference("Location");
+//                            root.child(userGender).child(binding.textAge.getText().toString()).child(id).
+//                                    setValue(user);
+//                            root1.child(postalCode).child(id).setValue(userlocation);
                             Toast.makeText(SignUp.this, "user created successfully", Toast.LENGTH_SHORT).show();
                         } else{
                            Toast.makeText(SignUp.this,"Please fill all information",Toast.LENGTH_SHORT).show();
