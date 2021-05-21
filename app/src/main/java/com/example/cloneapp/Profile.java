@@ -68,7 +68,6 @@ public class Profile extends AppCompatActivity {
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 user_gender= (String) value.get("gender");
                 user_zipcode=(String) value.get("zipcode");
-                age1=(String) value.get("age");
                 Log.d("TAG", "onEvent: "+user_gender+" "+user_zipcode+" "+user_age);
                 value.getData();
                 Log.d("TAG", "dipali"+value.getId() + " => " + value.getData());
@@ -93,10 +92,10 @@ public class Profile extends AppCompatActivity {
                                 Log.d("TAG", "dipali"+document.getId() + " => " + document.getData());
                                 Log.d("name", document.get("username").toString());
                                 String Url=document.get("profilepic").toString();
-                                //Picasso.get().load(Url).into(binding.profileImage);
-                                Glide.with(getApplicationContext())
-                                        .load(Url)
-                                        .into(binding.profileImage);
+//                                Picasso.get().load(Url).into(binding.profileImage);
+//                                Glide.with(getApplicationContext())
+//                                        .load(Url)
+//                                        .into(binding.profileImage);
                                 Picasso.get().load(Url).into(binding.profileImage);
                                 binding.username.setText(document.get("username").toString());
                                 binding.age.setText(document.get("age").toString());
