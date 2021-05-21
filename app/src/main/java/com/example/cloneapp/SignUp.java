@@ -182,6 +182,8 @@ public class SignUp extends AppCompatActivity {
 //                                    setValue(user);
 //                            root1.child(postalCode).child(id).setValue(userlocation);
                             Toast.makeText(SignUp.this, "user created successfully", Toast.LENGTH_SHORT).show();
+                            Intent intent=new Intent(SignUp.this,SignIn.class);
+                            startActivity(intent);
                         } else{
                            Toast.makeText(SignUp.this,"Please fill all information",Toast.LENGTH_SHORT).show();
 

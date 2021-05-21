@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,6 +69,10 @@ public class Profile extends AppCompatActivity {
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 user_gender= (String) value.get("gender");
                 user_zipcode=(String) value.get("zipcode");
+                binding.username.setText(value.get("username").toString());
+                binding.location.setText(value.get("location").toString());
+                String Url=value.get("profilepic").toString();
+                Picasso.get().load(Url).into(binding.profileImage);
                 Log.d("TAG", "onEvent: "+user_gender+" "+user_zipcode+" "+user_age);
                 value.getData();
                 Log.d("TAG", "dipali"+value.getId() + " => " + value.getData());
@@ -76,38 +81,45 @@ public class Profile extends AppCompatActivity {
         });
 
 
-        CollectionReference users = db.collection("users");
-        //Query userQuery= users.whereEqualTo("username", "prachi");
-        Query userQuery = users.whereEqualTo("age",22).whereEqualTo("gender", "female");
+//        CollectionReference users = db.collection("users");
+//        //Query userQuery= users.whereEqualTo("username", "prachi");
+//        Query userQuery = users.whereEqualTo("age",22).whereEqualTo("gender", "female");
 
         //Query chainedQuery1 = cities.whereEqualTo("state", "CO").whereEqualTo("name", "Denver");
-                userQuery.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-
-                                //User user=document.toObject(User.class);
-                                Log.d("TAG", "dipali"+document.getId() + " => " + document.getData());
-                                Log.d("name", document.get("username").toString());
-                                String Url=document.get("profilepic").toString();
+//                userQuery.get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//
+//                                //User user=document.toObject(User.class);
+//                                Log.d("TAG", "dipali"+document.getId() + " => " + document.getData());
+//                                Log.d("name", document.get("username").toString());
+//                                String Url=document.get("profilepic").toString();
+////                                Picasso.get().load(Url).into(binding.profileImage);
+////                                Glide.with(getApplicationContext())
+////                                        .load(Url)
+////                                        .into(binding.profileImage);
 //                                Picasso.get().load(Url).into(binding.profileImage);
-//                                Glide.with(getApplicationContext())
-//                                        .load(Url)
-//                                        .into(binding.profileImage);
-                                Picasso.get().load(Url).into(binding.profileImage);
-                                binding.username.setText(document.get("username").toString());
-                                binding.age.setText(document.get("age").toString());
-                                binding.gender.setText(document.get("gender").toString());
-                                binding.location.setText(document.get("location").toString());
-                            }
-                        } else {
-                            Log.w("TAG", "Error getting documents.", task.getException());
-                        }
-                    }
-                });
+//                                binding.username.setText(document.get("username").toString());
+//                                binding.location.setText(document.get("location").toString());
+//                            }
+//                        } else {
+//                            Log.w("TAG", "Error getting documents.", task.getException());
+//                        }
+//                    }
+//                });
+         binding.next.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 Intent intent = new Intent(Profile.this,UserRecycler.class);
+                 startActivity(intent);
+             }
+         });
+
    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater=getMenuInflater();
