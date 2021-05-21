@@ -162,20 +162,20 @@ public class SignUp extends AppCompatActivity {
                                     Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
                                 }
                             });
-                            users.add(user1)
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                        @Override
-                                        public void onSuccess(DocumentReference documentReference) {
-                                            Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.w(TAG, "Error adding document", e);
-                                            Log.e("MyTag",task.getException().toString());
-                                        }
-                                    });
+//                            users.add(user1)
+//                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                                        @Override
+//                                        public void onSuccess(DocumentReference documentReference) {
+//                                            Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+//                                        }
+//                                    })
+//                                    .addOnFailureListener(new OnFailureListener() {
+//                                        @Override
+//                                        public void onFailure(@NonNull Exception e) {
+//                                            Log.w(TAG, "Error adding document", e);
+//                                            Log.e("MyTag",task.getException().toString());
+//                                        }
+//                                    });
 //                            DatabaseReference root = database.getReference("Users");
 //                            DatabaseReference root1 = database.getReference("Location");
 //                            root.child(userGender).child(binding.textAge.getText().toString()).child(id).

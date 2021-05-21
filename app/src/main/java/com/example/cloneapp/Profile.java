@@ -93,10 +93,10 @@ public class Profile extends AppCompatActivity {
                                 Log.d("TAG", "dipali"+document.getId() + " => " + document.getData());
                                 Log.d("name", document.get("username").toString());
                                 String Url=document.get("profilepic").toString();
-//                                Picasso.get().load(Url).into(binding.profileImage);
-//                                Glide.with(getApplicationContext())
-//                                        .load(Url)
-//                                        .into(binding.profileImage);
+                                //Picasso.get().load(Url).into(binding.profileImage);
+                                Glide.with(getApplicationContext())
+                                        .load(Url)
+                                        .into(binding.profileImage);
                                 Picasso.get().load(Url).into(binding.profileImage);
                                 binding.username.setText(document.get("username").toString());
                                 binding.age.setText(document.get("age").toString());
