@@ -59,7 +59,7 @@ public class Profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding=ActivityProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        getSupportActionBar().setTitle("Your Profile");
+        //getSupportActionBar().setTitle("Your Profile");
         auth=FirebaseAuth.getInstance();
         user_id=auth.getCurrentUser().getUid();
         db = FirebaseFirestore.getInstance();
@@ -113,7 +113,7 @@ public class Profile extends AppCompatActivity {
          binding.next.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
-                 Intent intent = new Intent(Profile.this,UserRecycler.class);
+                 Intent intent = new Intent(Profile.this,MainActivity1.class);
                  startActivity(intent);
              }
          });

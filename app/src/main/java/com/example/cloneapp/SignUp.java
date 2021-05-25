@@ -25,6 +25,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -120,8 +121,6 @@ public class SignUp extends AppCompatActivity {
         male=findViewById(R.id.male);
         text_location=findViewById(R.id.text_location);
         signup=findViewById(R.id.signup);
-        google=findViewById(R.id.google);
-        facebook=findViewById(R.id.facebook);
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -135,33 +134,53 @@ public class SignUp extends AppCompatActivity {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        binding.loginUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SignUp.this , SignIn.class));
+            }
+        });
 
         //Signup onclick listner
         binding.signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressDialog.show();
-                mAuth.createUserWithEmailAndPassword(binding.email.getText().toString(),
-                        binding.textPassword.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
-                        if (task.isSuccessful()) {
-                            Users user1 = new Users(contentUri.toString(), binding.name.getText().toString(), binding.email.getText().toString(),
-                                    binding.textPassword.getText().toString(), binding.textLocation.getText().toString(), userGender, postalCode,Integer.parseInt(binding.textAge.getText().toString()));
-                            Users user = new Users(binding.textPassword.getText().toString(), contentUri.toString(), binding.name.getText().toString(), binding.email.getText().toString());
-                            UserLocation userlocation = new UserLocation((binding.email.getText().toString()), Result);
-                            String id = task.getResult().getUser().getUid();
-                            CollectionReference users = db.collection("users");
-                            DocumentReference documentReference=db.collection("users").document(id);
-                            uploader=storage.getReference("Image1"+new Random().nextInt(100));
-                            uploader.putFile(contentUri);
-                            documentReference.set(user1).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                                }
-                            });
+                String name = binding.name.getText().toString();
+                String email = binding.email.getText().toString();
+                String pass = binding.textPassword.getText().toString();
+                String location = binding.location.getText().toString();
+                String age = binding.textAge.getText().toString();
+                String gender =  userGender;
+
+                if (profileImage.getDrawable()==null){
+                    Toast.makeText(SignUp.this, "Image or other Credentials are empty!", Toast.LENGTH_SHORT).show();
+                }
+                if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) ||  TextUtils.isEmpty(pass) || TextUtils.isEmpty(location) || TextUtils.isEmpty(age) ||
+                        TextUtils.isEmpty(gender)) {
+                    Toast.makeText(SignUp.this, "Image or other Credentials are empty!", Toast.LENGTH_SHORT).show();
+                } else {
+                    progressDialog.show();
+                    mAuth.createUserWithEmailAndPassword(binding.email.getText().toString(),
+                            binding.textPassword.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            progressDialog.dismiss();
+                            if (task.isSuccessful()) {
+                                Users user1 = new Users(contentUri.toString(), binding.name.getText().toString(), binding.email.getText().toString(),
+                                        binding.textPassword.getText().toString(), binding.textLocation.getText().toString(), userGender, postalCode, Integer.parseInt(binding.textAge.getText().toString()));
+                                Users user = new Users(binding.textPassword.getText().toString(), contentUri.toString(), binding.name.getText().toString(), binding.email.getText().toString());
+                                UserLocation userlocation = new UserLocation((binding.email.getText().toString()), Result);
+                                String id = task.getResult().getUser().getUid();
+                                CollectionReference users = db.collection("users");
+                                DocumentReference documentReference = db.collection("users").document(id);
+                                uploader = storage.getReference("Image1" + new Random().nextInt(100));
+                                uploader.putFile(contentUri);
+                                documentReference.set(user1).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                    }
+                                });
 //                            users.add(user1)
 //                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
 //                                        @Override
@@ -181,16 +200,18 @@ public class SignUp extends AppCompatActivity {
 //                            root.child(userGender).child(binding.textAge.getText().toString()).child(id).
 //                                    setValue(user);
 //                            root1.child(postalCode).child(id).setValue(userlocation);
-                            Toast.makeText(SignUp.this, "user created successfully", Toast.LENGTH_SHORT).show();
-                            Intent intent=new Intent(SignUp.this,SignIn.class);
-                            startActivity(intent);
-                        } else{
-                           Toast.makeText(SignUp.this,"Please fill all information",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignUp.this, "user created successfully", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(SignUp.this, Profile.class);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(SignUp.this, "Please fill all information", Toast.LENGTH_SHORT).show();
 
-                       }
-                    }
-                });
+                            }
+                        }
+                    });
+                }
             }
+
         });
 
         //profile onclicklistner
@@ -201,14 +222,14 @@ public class SignUp extends AppCompatActivity {
             }
         });
 
-        binding.google.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signIn();
-            }
-        });
+//        binding.google.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                signIn();
+//            }
+//        });
 
-        getSupportActionBar().setTitle("Sign Up");
+       // getSupportActionBar().setTitle("Sign Up");
     }
 
     //on start checking if location is granted or not

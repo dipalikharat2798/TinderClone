@@ -47,11 +47,11 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        getSupportActionBar().hide();
-        getWindow().setFlags(
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-        );
+//        getSupportActionBar().hide();
+//        getWindow().setFlags(
+//                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+//                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+//        );
         Thread thread = new Thread() {
             public void run() {
                 try {
